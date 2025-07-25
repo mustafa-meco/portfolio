@@ -1,0 +1,153 @@
+/* About Section */
+.about {
+    padding: var(--spacing-3xl) 0;
+    background: rgba(26, 26, 26, 0.5);
+}
+
+.about-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--spacing-3xl);
+    align-items: center;
+}
+
+.about-text h3 {
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--spacing-lg);
+    color: var(--secondary-color);
+    transition: var(--transition-normal);
+}
+
+.about-text h3:hover {
+    color: var(--primary-color);
+    transform: translateX(10px);
+}
+
+.about-text p {
+    font-size: var(--font-size-lg);
+    color: var(--gray-text);
+    margin-bottom: var(--spacing-lg);
+    transition: var(--transition-normal);
+}
+
+.about-text p:hover {
+    color: var(--light-text);
+    transform: translateX(5px);
+}
+
+.about-highlights {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+}
+
+.highlight-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    background: var(--dark-card);
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    transition: var(--transition-normal);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.highlight-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 102, 255, 0.1), transparent);
+    transition: var(--transition-normal);
+}
+
+.highlight-item:hover::before {
+    left: 100%;
+}
+
+.highlight-item:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary-color);
+    box-shadow: 
+        0 10px 25px rgba(0, 102, 255, 0.2),
+        0 0 20px rgba(0, 102, 255, 0.1);
+}
+
+.highlight-item i {
+    color: var(--primary-color);
+    font-size: var(--font-size-lg);
+    transition: var(--transition-normal);
+    z-index: 1;
+    position: relative;
+}
+
+.highlight-item:hover i {
+    color: var(--secondary-color);
+    transform: scale(1.2) rotate(10deg);
+}
+
+.highlight-item span {
+    transition: var(--transition-normal);
+    z-index: 1;
+    position: relative;
+}
+
+.highlight-item:hover span {
+    color: var(--light-text);
+    font-weight: 600;
+}
+
+.about-image {
+    display: flex;
+    justify-content: center;
+}
+
+.profile-image {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--primary-color);
+    box-shadow: 
+        0 0 20px rgba(0, 102, 255, 0.3),
+        0 0 40px rgba(0, 102, 255, 0.2),
+        0 0 60px rgba(0, 102, 255, 0.1);
+    transition: var(--transition-normal);
+    position: relative;
+    cursor: pointer;
+}
+
+.profile-image:hover {
+    transform: scale(1.05) rotate(2deg);
+    box-shadow: 
+        0 0 30px rgba(0, 102, 255, 0.4),
+        0 0 50px rgba(0, 102, 255, 0.3),
+        0 0 70px rgba(0, 102, 255, 0.2);
+    border-color: var(--secondary-color);
+}
+
+.profile-image::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    z-index: -1;
+    opacity: 0.3;
+    animation: pulseGlow 3s ease-in-out infinite;
+}
+
+.profile-image:hover::before {
+    opacity: 0.6;
+    animation: none;
+    background: var(--gradient-accent);
+}

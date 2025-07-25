@@ -1,0 +1,491 @@
+/* Playlists Section */
+.playlists {
+    padding: var(--spacing-3xl) 0;
+    background: rgba(26, 26, 26, 0.5);
+}
+
+.playlists-intro {
+    text-align: center;
+    color: var(--gray-text);
+    font-size: var(--font-size-lg);
+    max-width: 800px;
+    margin: 0 auto var(--spacing-3xl) auto;
+    line-height: 1.6;
+}
+
+.playlists-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: var(--spacing-xl);
+    margin-bottom: var(--spacing-3xl);
+}
+
+.playlist-card {
+    background: var(--dark-card);
+    border-radius: 15px;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    cursor: pointer;
+    transition: var(--transition-normal);
+    position: relative;
+}
+
+.playlist-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 0, 0, 0.05), rgba(255, 0, 0, 0.1));
+    opacity: 0;
+    transition: var(--transition-normal);
+    z-index: 1;
+}
+
+.playlist-card:hover::before {
+    opacity: 1;
+}
+
+.playlist-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    border-color: #ff0000;
+    box-shadow: 
+        0 20px 40px rgba(255, 0, 0, 0.3),
+        0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.playlist-image {
+    height: 220px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.playlist-thumbnail-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition-normal);
+}
+
+.playlist-card:hover .playlist-thumbnail-img {
+    transform: scale(1.05);
+}
+
+.playlist-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: var(--transition-normal);
+}
+
+.playlist-card:hover .playlist-overlay {
+    opacity: 1;
+}
+
+.play-button {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-normal);
+    z-index: 3;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.playlist-card:hover .play-button {
+    transform: scale(1.1);
+    background: white;
+    box-shadow: 0 10px 30px rgba(255, 0, 0, 0.5);
+}
+
+.play-button i {
+    font-size: var(--font-size-2xl);
+    color: #ff0000;
+    margin-left: 3px;
+}
+
+.playlist-info {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    z-index: 2;
+}
+
+.video-count,
+.playlist-duration {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: 6px;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.playlist-content {
+    padding: var(--spacing-xl);
+    position: relative;
+    z-index: 2;
+}
+
+.playlist-meta {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.playlist-category {
+    background: var(--primary-color);
+    color: white;
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: 20px;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: var(--transition-normal);
+}
+
+.playlist-level {
+    background: var(--secondary-color);
+    color: var(--dark-bg);
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: 20px;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: var(--transition-normal);
+}
+
+.playlist-card:hover .playlist-category {
+    background: #ff0000;
+    transform: scale(1.05);
+}
+
+.playlist-card:hover .playlist-level {
+    background: var(--accent-color);
+    color: white;
+    transform: scale(1.05);
+}
+
+.playlist-content h3 {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-md);
+    color: var(--light-text);
+    line-height: 1.3;
+    transition: var(--transition-normal);
+}
+
+.playlist-card:hover .playlist-content h3 {
+    color: #ff0000;
+    transform: translateX(5px);
+}
+
+.playlist-content p {
+    color: var(--gray-text);
+    margin-bottom: var(--spacing-lg);
+    line-height: 1.6;
+    transition: var(--transition-normal);
+}
+
+.playlist-card:hover .playlist-content p {
+    color: var(--light-text);
+}
+
+.playlist-stats {
+    display: flex;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+.playlist-stats .stat {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: var(--gray-text);
+    font-size: var(--font-size-sm);
+    transition: var(--transition-normal);
+}
+
+.playlist-card:hover .playlist-stats .stat {
+    color: var(--light-text);
+}
+
+.playlist-stats .stat i {
+    color: #ff0000;
+    font-size: var(--font-size-base);
+}
+
+.playlist-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    background: #ff0000;
+    color: white;
+    text-decoration: none;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: 8px;
+    font-weight: 600;
+    transition: var(--transition-fast);
+    position: relative;
+    overflow: hidden;
+}
+
+.playlist-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: var(--transition-fast);
+}
+
+.playlist-link:hover::before {
+    left: 100%;
+}
+
+.playlist-link:hover {
+    background: #cc0000;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 0, 0, 0.4);
+}
+
+.playlist-link i {
+    font-size: var(--font-size-lg);
+}
+
+.playlists-cta {
+    text-align: center;
+    padding: var(--spacing-2xl);
+    background: var(--dark-card);
+    border-radius: 15px;
+    border: 1px solid var(--border-color);
+    transition: var(--transition-normal);
+}
+
+.playlists-cta:hover {
+    border-color: #ff0000;
+    box-shadow: 0 10px 30px rgba(255, 0, 0, 0.2);
+}
+
+.playlists-cta p {
+    font-size: var(--font-size-lg);
+    color: var(--gray-text);
+    margin-bottom: var(--spacing-lg);
+    transition: var(--transition-normal);
+}
+
+.playlists-cta:hover p {
+    color: var(--light-text);
+}
+
+/* Recommendations Section */
+.recommendations {
+    padding: var(--spacing-3xl) 0;
+    background: rgba(26, 26, 26, 0.5);
+}
+
+.recommendations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: var(--spacing-xl);
+}
+
+.recommendation-card {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.recommendation-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(0, 102, 255, 0.03), rgba(0, 212, 170, 0.03));
+    opacity: 0;
+    transition: var(--transition-normal);
+}
+
+.recommendation-card:hover::before {
+    opacity: 1;
+}
+
+.recommendation-card:hover {
+    transform: translateY(-5px) scale(1.01);
+    border-color: var(--primary-color);
+    box-shadow: 
+        0 15px 30px rgba(0, 102, 255, 0.2),
+        0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.recommendation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: var(--spacing-xl);
+    border-bottom: 1px solid var(--border-color);
+    background: linear-gradient(135deg, rgba(0, 102, 255, 0.05), rgba(0, 212, 170, 0.05));
+    transition: var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+}
+
+.recommendation-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 102, 255, 0.1), transparent);
+    transition: var(--transition-normal);
+}
+
+.recommendation-card:hover .recommendation-header::before {
+    left: 100%;
+}
+
+.recommender-info h4 {
+    color: var(--light-text);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+    transition: var(--transition-normal);
+    position: relative;
+    z-index: 1;
+}
+
+.recommendation-card:hover .recommender-info h4 {
+    color: var(--primary-color);
+    transform: translateX(3px);
+}
+
+.recommender-info p {
+    color: var(--secondary-color);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-xs);
+    font-weight: 500;
+    transition: var(--transition-normal);
+    position: relative;
+    z-index: 1;
+}
+
+.recommendation-card:hover .recommender-info p {
+    color: var(--light-text);
+}
+
+.relationship {
+    color: var(--gray-text);
+    font-size: var(--font-size-xs);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    transition: var(--transition-normal);
+    position: relative;
+    z-index: 1;
+}
+
+.recommendation-card:hover .relationship {
+    color: var(--light-text);
+}
+
+.relationship::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    background: var(--gray-text);
+    border-radius: 50%;
+    transition: var(--transition-normal);
+}
+
+.recommendation-card:hover .relationship::before {
+    background: var(--secondary-color);
+    transform: scale(1.5);
+}
+
+.linkedin-icon {
+    color: #0077b5;
+    font-size: var(--font-size-xl);
+    opacity: 0.8;
+    transition: var(--transition-fast);
+    position: relative;
+    z-index: 1;
+}
+
+.recommendation-card:hover .linkedin-icon {
+    opacity: 1;
+    transform: scale(1.2) rotate(10deg);
+    color: var(--primary-color);
+}
+
+.recommendation-content {
+    padding: var(--spacing-xl);
+    position: relative;
+}
+
+.recommendation-content::before {
+    content: '"';
+    position: absolute;
+    top: var(--spacing-md);
+    left: var(--spacing-md);
+    font-size: var(--font-size-4xl);
+    color: var(--primary-color);
+    opacity: 0.3;
+    font-family: Georgia, serif;
+    line-height: 1;
+    transition: var(--transition-normal);
+}
+
+.recommendation-card:hover .recommendation-content::before {
+    opacity: 0.6;
+    color: var(--secondary-color);
+    transform: scale(1.1);
+}
+
+.recommendation-content p {
+    font-size: var(--font-size-base);
+    color: var(--gray-text);
+    line-height: 1.7;
+    margin-bottom: var(--spacing-md);
+    position: relative;
+    padding-left: var(--spacing-lg);
+    transition: var(--transition-normal);
+}
+
+.recommendation-card:hover .recommendation-content p {
+    color: var(--light-text);
+    padding-left: var(--spacing-xl);
+}
+
+.recommendation-content p:last-child {
+    margin-bottom: 0;
+}
+
+.recommendation-content p:first-child {
+    margin-top: var(--spacing-sm);
+}

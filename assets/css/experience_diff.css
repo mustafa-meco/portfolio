@@ -1,0 +1,347 @@
+/* Experience Timeline */
+.experience {
+    padding: var(--spacing-3xl) 0;
+    background: rgba(26, 26, 26, 0.5);
+}
+
+.timeline {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--gradient-primary);
+    transform: translateX(-50%);
+    transition: var(--transition-normal);
+}
+
+.timeline:hover::before {
+    background: var(--gradient-accent);
+    width: 4px;
+    box-shadow: 0 0 20px rgba(0, 102, 255, 0.5);
+}
+
+.timeline-item {
+    display: flex;
+    margin-bottom: var(--spacing-2xl);
+    position: relative;
+    transition: var(--transition-normal);
+}
+
+.timeline-item:hover {
+    transform: scale(1.02);
+}
+
+.timeline-item:nth-child(odd) {
+    flex-direction: row-reverse;
+    text-align: right;
+}
+
+.timeline-item:nth-child(odd) .timeline-content {
+    margin-right: var(--spacing-xl);
+}
+
+.timeline-item:nth-child(even) .timeline-content {
+    margin-left: var(--spacing-xl);
+}
+
+.timeline-date {
+    flex: 0 0 120px;
+    font-weight: 600;
+    color: var(--secondary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: var(--transition-normal);
+}
+
+.timeline-date:hover {
+    color: var(--primary-color);
+    transform: scale(1.1);
+}
+
+.timeline-date::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    border: 4px solid var(--dark-bg);
+    left: 50%;
+    transform: translateX(-50%);
+    transition: var(--transition-normal);
+}
+
+.timeline-item:hover .timeline-date::after {
+    background: var(--secondary-color);
+    width: 20px;
+    height: 20px;
+    box-shadow: 
+        0 0 15px rgba(0, 212, 170, 0.5),
+        0 0 30px rgba(0, 212, 170, 0.3);
+}
+
+.timeline-content {
+    flex: 1;
+    background: var(--dark-card);
+    padding: var(--spacing-xl);
+    border-radius: 15px;
+    border: 1px solid var(--border-color);
+    transition: var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+}
+
+.timeline-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0, 102, 255, 0.05), rgba(0, 212, 170, 0.05));
+    opacity: 0;
+    transition: var(--transition-normal);
+}
+
+.timeline-content:hover::before {
+    opacity: 1;
+}
+
+.timeline-content:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary-color);
+    box-shadow: 
+        0 15px 35px rgba(0, 102, 255, 0.2),
+        0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.timeline-content h3 {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-sm);
+    color: var(--light-text);
+    transition: var(--transition-normal);
+    position: relative;
+    z-index: 1;
+}
+
+.timeline-content:hover h3 {
+    color: var(--primary-color);
+    transform: translateX(5px);
+}
+
+.timeline-content h4 {
+    color: var(--secondary-color);
+    margin-bottom: var(--spacing-md);
+    transition: var(--transition-normal);
+    position: relative;
+    z-index: 1;
+}
+
+.timeline-content:hover h4 {
+    color: var(--light-text);
+}
+
+.timeline-content p {
+    transition: var(--transition-normal);
+    position: relative;
+    z-index: 1;
+}
+
+.timeline-content:hover p {
+    color: var(--light-text);
+}
+
+.timeline-tags {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+}
+
+.company-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    transition: var(--transition-normal);
+    position: relative;
+    z-index: 1;
+}
+
+.company-header:hover {
+    transform: translateX(5px);
+}
+
+.company-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    background: rgba(255, 255, 255, 0.1);
+    padding: var(--spacing-xs);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: var(--transition-normal);
+    position: relative;
+}
+
+.company-logo::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    opacity: 0;
+    border-radius: 8px;
+    transition: var(--transition-normal);
+}
+
+.company-logo:hover::before {
+    opacity: 0.2;
+}
+
+.company-logo:hover {
+    transform: scale(1.1) rotate(5deg);
+    border-color: var(--primary-color);
+    box-shadow: 
+        0 5px 15px rgba(0, 102, 255, 0.3),
+        0 0 20px rgba(0, 102, 255, 0.2);
+}
+
+.company-logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    transition: var(--transition-normal);
+    position: relative;
+    z-index: 1;
+}
+
+.company-logo:hover .company-logo-img {
+    transform: scale(1.1);
+}
+
+.job-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.job-info h3 {
+    margin: 0;
+    font-size: var(--font-size-lg);
+    line-height: 1.3;
+    transition: var(--transition-normal);
+}
+
+.job-info h4 {
+    margin: 0;
+    font-size: var(--font-size-base);
+    opacity: 0.9;
+    transition: var(--transition-normal);
+}
+
+.company-header:hover .job-info h3 {
+    color: var(--primary-color);
+}
+
+.company-header:hover .job-info h4 {
+    color: var(--secondary-color);
+    opacity: 1;
+}
+
+/* Company-specific logo styles for better display */
+.company-logo-img[src*="efika"] {
+    filter: brightness(1.2);
+}
+
+.company-logo-img[src*="efika"]:hover {
+    filter: brightness(1.4) contrast(1.1);
+}
+
+.company-logo-img[src*="Codha_Heroes"] {
+    border-radius: 4px;
+}
+
+.company-logo-img[src*="labtronic"] {
+    filter: brightness(1.1) contrast(1.1);
+}
+
+.company-logo-img[src*="labtronic"]:hover {
+    filter: brightness(1.3) contrast(1.2);
+}
+
+.company-logo-img[src*="zewail_city"] {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 4px;
+    padding: 2px;
+}
+
+.company-logo-img[src*="ischooltech"] {
+    border-radius: 50%;
+}
+
+.company-logo-img[src*="mindvalley"] {
+    filter: brightness(1.3);
+}
+
+.company-logo-img[src*="mindvalley"]:hover {
+    filter: brightness(1.5) saturate(1.2);
+}
+
+.company-logo-img[src*="sync_interns"] {
+    border-radius: 50%;
+}
+
+.company-logo-img[src*="amica"] {
+    border-radius: 50%;
+    filter: brightness(1.2);
+}
+
+.company-logo-img[src*="amica"]:hover {
+    filter: brightness(1.4) saturate(1.1);
+}
+
+/* Timeline item current indicator */
+.timeline-item.current::before {
+    content: 'Current';
+    position: absolute;
+    top: -10px;
+    right: 20px;
+    background: var(--gradient-primary);
+    color: white;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: 20px;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    z-index: 1;
+    transition: var(--transition-normal);
+}
+
+.timeline-item.current:hover::before {
+    background: var(--gradient-accent);
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+}
+
+.timeline-item:nth-child(odd).current::before {
+    right: auto;
+    left: 20px;
+}

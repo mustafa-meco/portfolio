@@ -118,12 +118,57 @@ if (contactForm) {
             return;
         }
         
-        // Simulate form submission (replace with actual form handling)
-        showNotification('Message sent successfully! I\'ll get back to you soon.', 'success');
-        contactForm.reset();
+        // Enhanced form submission with better user feedback
+        const submitBtn = contactForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
         
-        // Here you would typically send the data to your backend
-        // Example: sendContactForm({ name, email, subject, message });
+        // Show loading state
+        submitBtn.textContent = 'Sending...';
+        submitBtn.disabled = true;
+        
+        // Simulate form submission (replace with actual form handling)
+        setTimeout(() => {
+            // You can integrate with services like:
+            // - EmailJS: emailjs.send('service_id', 'template_id', formData)
+            // - Netlify Forms: Just add netlify attribute to form
+            // - Formspree: https://formspree.io/
+            // - Backend API: fetch('/api/contact', { method: 'POST', body: formData })
+            
+            showNotification('Message sent successfully! I\'ll get back to you soon.', 'success');
+            contactForm.reset();
+            
+            // Reset button state
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }, 2000);
+        
+        // For production, replace the setTimeout with actual form submission:
+        /*
+        fetch('/api/contact', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name, email, subject, message })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification('Message sent successfully! I\'ll get back to you soon.', 'success');
+                contactForm.reset();
+            } else {
+                showNotification('Failed to send message. Please try again.', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification('An error occurred. Please try again later.', 'error');
+        })
+        .finally(() => {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        });
+        */
     });
 }
 
@@ -255,13 +300,18 @@ notificationStyles.textContent = `
 document.head.appendChild(notificationStyles);
 
 // Animate elements on scroll
-const animateOnScrollElements = document.querySelectorAll('.skill-category, .timeline-item, .project-card, .achievement-item');
+const animateOnScrollElements = document.querySelectorAll('.skill-category, .timeline-item, .project-card, .achievement-item, .recommendation-card');
 
 const scrollObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.style.animation = 'fadeInUp 0.6s ease forwards';
             entry.target.style.opacity = '1';
+            
+            // Add animate class for timeline items
+            if (entry.target.classList.contains('timeline-item')) {
+                entry.target.classList.add('animate');
+            }
         }
     });
 }, {
@@ -275,77 +325,170 @@ animateOnScrollElements.forEach(element => {
     scrollObserver.observe(element);
 });
 
-// Tech icons hover effects
-techIcons.forEach(icon => {
-    icon.addEventListener('mouseenter', () => {
-        icon.style.transform = 'scale(1.1)';
-        icon.style.boxShadow = '0 10px 25px rgba(0, 102, 255, 0.3)';
-    });
-    
-    icon.addEventListener('mouseleave', () => {
-        icon.style.transform = 'scale(1)';
-        icon.style.boxShadow = 'none';
-    });
-});
-
-// Typing animation for hero title
-function typeWriter(element, text, speed = 100) {
-    let i = 0;
-    element.innerHTML = '';
-    
-    function type() {
-        if (i < text.length) {
-            element.innerHTML += text.charAt(i);
-            i++;
-            setTimeout(type, speed);
-        }
-    }
-    
-    type();
-}
-
-// Initialize typing animation when page loads
-window.addEventListener('load', () => {
-    const heroTitle = document.querySelector('.hero-title');
-    if (heroTitle) {
-        const originalText = heroTitle.innerHTML;
-        // Uncomment the line below if you want typing animation
-        // typeWriter(heroTitle, originalText.replace(/<[^>]*>/g, ''), 50);
-    }
-});
-
-// Smooth reveal animation for stats
-const stats = document.querySelectorAll('.stat-number');
-const statsObserver = new IntersectionObserver((entries) => {
+// Skills progress bar animation
+const skillProgressObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-            const stat = entry.target;
-            const finalValue = parseInt(stat.textContent);
-            animateValue(stat, 0, finalValue, 2000);
-            statsObserver.unobserve(stat);
+            const progressBars = entry.target.querySelectorAll('.skill-progress-bar');
+            progressBars.forEach(bar => {
+                const progress = bar.getAttribute('data-progress');
+                if (progress) {
+                    setTimeout(() => {
+                        bar.style.width = progress + '%';
+                    }, 200);
+                }
+            });
+            // Only animate once
+            skillProgressObserver.unobserve(entry.target);
         }
     });
-}, { threshold: 0.5 });
-
-stats.forEach(stat => {
-    statsObserver.observe(stat);
+}, {
+    threshold: 0.3
 });
 
-// Animate number counting
-function animateValue(element, start, end, duration) {
-    const increment = end > start ? 1 : -1;
-    const stepTime = Math.abs(Math.floor(duration / (end - start)));
-    const suffix = element.textContent.replace(/[0-9]/g, '');
-    
-    let current = start;
-    const timer = setInterval(() => {
-        current += increment;
-        element.textContent = current + suffix;
-        
-        if (current === end) {
-            clearInterval(timer);
+// Observe all skill categories for progress animation
+document.querySelectorAll('.skill-category').forEach(category => {
+    skillProgressObserver.observe(category);
+});
+
+// Enhanced timeline animation with stagger effect
+const timelineObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+            setTimeout(() => {
+                entry.target.classList.add('animate');
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }, index * 200); // Stagger animation
+            
+            timelineObserver.unobserve(entry.target);
         }
-    }, stepTime);
+    });
+}, {
+    threshold: 0.2
+});
+
+// Observe timeline items
+document.querySelectorAll('.timeline-item').forEach(item => {
+    timelineObserver.observe(item);
+});
+
+// Mark current position (most recent job)
+const currentJobs = document.querySelectorAll('.timeline-item');
+if (currentJobs.length > 0) {
+    // Mark the first two items as current (since they're both 2024-Present and 2023-Present)
+    currentJobs[0].classList.add('current');
+    if (currentJobs[1]) {
+        currentJobs[1].classList.add('current');
+    }
+}
+
+// Enhanced skill tag interactions
+document.querySelectorAll('.skill-tag').forEach(tag => {
+    tag.addEventListener('click', () => {
+        // Create ripple effect
+        const ripple = document.createElement('span');
+        ripple.style.cssText = `
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        `;
+        
+        const rect = tag.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = (rect.width / 2 - size / 2) + 'px';
+        ripple.style.top = (rect.height / 2 - size / 2) + 'px';
+        
+        tag.style.position = 'relative';
+        tag.appendChild(ripple);
+        
+        setTimeout(() => {
+            ripple.remove();
+        }, 600);
+    });
+});
+
+// Add ripple animation styles
+const rippleStyles = document.createElement('style');
+rippleStyles.textContent = `
+    @keyframes ripple {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(rippleStyles);
+
+// Experience section interactive features
+document.querySelectorAll('.timeline-tags .tag').forEach(tag => {
+    tag.addEventListener('click', () => {
+        // Filter timeline items by tag
+        const tagText = tag.textContent.toLowerCase();
+        const timelineItems = document.querySelectorAll('.timeline-item');
+        
+        timelineItems.forEach(item => {
+            const itemTags = Array.from(item.querySelectorAll('.tag')).map(t => t.textContent.toLowerCase());
+            if (itemTags.includes(tagText)) {
+                item.style.opacity = '1';
+                item.style.transform = 'scale(1.02)';
+                item.style.border = '2px solid var(--primary-color)';
+            } else {
+                item.style.opacity = '0.5';
+                item.style.transform = 'scale(0.98)';
+                item.style.border = '1px solid var(--border-color)';
+            }
+        });
+        
+        // Reset after 3 seconds
+        setTimeout(() => {
+            timelineItems.forEach(item => {
+                item.style.opacity = '';
+                item.style.transform = '';
+                item.style.border = '';
+            });
+        }, 3000);
+    });
+});
+
+// Skills category hover effects enhancement
+document.querySelectorAll('.skill-category').forEach(category => {
+    category.addEventListener('mouseenter', () => {
+        // Slightly fade other categories
+        document.querySelectorAll('.skill-category').forEach(other => {
+            if (other !== category) {
+                other.style.opacity = '0.7';
+                other.style.transform = 'scale(0.98)';
+            }
+        });
+    });
+    
+    category.addEventListener('mouseleave', () => {
+        // Reset all categories
+        document.querySelectorAll('.skill-category').forEach(other => {
+            other.style.opacity = '';
+            other.style.transform = '';
+        });
+    });
+});
+
+// Add performance optimization for animations
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+if (prefersReducedMotion.matches) {
+    // Disable animations for users who prefer reduced motion
+    const style = document.createElement('style');
+    style.textContent = `
+        *, *::before, *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+        }
+    `;
+    document.head.appendChild(style);
 }
 
 // Add particle effect to hero section (optional)
@@ -457,3 +600,102 @@ document.head.appendChild(loadingStyles);
 console.log('%c🚀 Welcome to Mustafa Ghoneim\'s Portfolio!', 'color: #0066ff; font-size: 16px; font-weight: bold;');
 console.log('%cBuilt with passion for AI, Robotics, and Education 🤖📚', 'color: #00d4aa; font-size: 14px;');
 console.log('%cInterested in collaborating? Reach out! 💪', 'color: #ff6b35; font-size: 14px;');
+
+// Skills category expandable functionality
+function initializeSkillCategories() {
+    const skillCategories = document.querySelectorAll('.skill-category');
+    
+    skillCategories.forEach(category => {
+        const header = category.querySelector('.skill-category-header');
+        const expandBtn = category.querySelector('.expand-btn');
+        const content = category.querySelector('.skill-content');
+        
+        // Only add expandable functionality to categories with expand buttons
+        if (expandBtn && content) {
+            // Initially collapse all expandable categories
+            category.classList.add('collapsed');
+            content.style.maxHeight = '0';
+            content.style.opacity = '0';
+            
+            // Add click handler to header for expanding/collapsing
+            header.addEventListener('click', (e) => {
+                e.preventDefault();
+                toggleSkillCategory(category);
+            });
+        } else if (content) {
+            // For non-expandable categories, ensure content is visible
+            content.style.maxHeight = 'none';
+            content.style.opacity = '1';
+        }
+    });
+}
+
+function toggleSkillCategory(category) {
+    const content = category.querySelector('.skill-content');
+    const expandBtn = category.querySelector('.expand-btn');
+    
+    if (!content || !expandBtn) return;
+    
+    const isCollapsed = category.classList.contains('collapsed');
+    
+    if (isCollapsed) {
+        // Expand
+        category.classList.remove('collapsed');
+        content.style.maxHeight = content.scrollHeight + 'px';
+        content.style.opacity = '1';
+        expandBtn.setAttribute('aria-label', 'Collapse category');
+    } else {
+        // Collapse
+        category.classList.add('collapsed');
+        content.style.maxHeight = '0';
+        content.style.opacity = '0';
+        expandBtn.setAttribute('aria-label', 'Expand category');
+    }
+}
+
+// Add expand buttons to all skill categories that don't have them
+function addExpandButtonsToSkillCategories() {
+    const skillCategories = document.querySelectorAll('.skill-category');
+    
+    skillCategories.forEach(category => {
+        const header = category.querySelector('.skill-category-header');
+        const existingBtn = category.querySelector('.expand-btn');
+        const skillItems = category.querySelector('.skill-items');
+        const skillTags = category.querySelector('.skill-tags');
+        
+        // Skip if expand button already exists
+        if (existingBtn) return;
+        
+        // Create expand button
+        const expandBtn = document.createElement('button');
+        expandBtn.className = 'expand-btn';
+        expandBtn.setAttribute('aria-label', 'Expand category');
+        expandBtn.innerHTML = '<i class="fas fa-chevron-down"></i>';
+        
+        // Add expand button to header
+        header.appendChild(expandBtn);
+        
+        // Wrap skill items and tags in skill-content div if not already wrapped
+        if (skillItems && !category.querySelector('.skill-content')) {
+            const skillContent = document.createElement('div');
+            skillContent.className = 'skill-content';
+            
+            // Move skill items and tags into content wrapper
+            if (skillItems) {
+                skillContent.appendChild(skillItems);
+            }
+            if (skillTags) {
+                skillContent.appendChild(skillTags);
+            }
+            
+            // Insert content wrapper after header
+            header.parentNode.insertBefore(skillContent, header.nextSibling);
+        }
+    });
+}
+
+// Initialize skill categories when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    addExpandButtonsToSkillCategories();
+    initializeSkillCategories();
+});
