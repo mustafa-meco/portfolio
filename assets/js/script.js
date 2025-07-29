@@ -325,7 +325,7 @@ animateOnScrollElements.forEach(element => {
     scrollObserver.observe(element);
 });
 
-// Skills progress bar animation
+// Skills progress bar animation - Fixed
 const skillProgressObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -333,8 +333,10 @@ const skillProgressObserver = new IntersectionObserver((entries) => {
             progressBars.forEach(bar => {
                 const progress = bar.getAttribute('data-progress');
                 if (progress) {
+                    // Set CSS custom property and add animate class
+                    bar.style.setProperty('--progress-width', progress + '%');
                     setTimeout(() => {
-                        bar.style.width = progress + '%';
+                        bar.classList.add('animate');
                     }, 200);
                 }
             });
@@ -351,145 +353,85 @@ document.querySelectorAll('.skill-category').forEach(category => {
     skillProgressObserver.observe(category);
 });
 
-// Enhanced timeline animation with stagger effect
-const timelineObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry, index) => {
-        if (entry.isIntersecting) {
-            setTimeout(() => {
-                entry.target.classList.add('animate');
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }, index * 200); // Stagger animation
-            
-            timelineObserver.unobserve(entry.target);
-        }
-    });
-}, {
-    threshold: 0.2
-});
-
-// Observe timeline items
-document.querySelectorAll('.timeline-item').forEach(item => {
-    timelineObserver.observe(item);
-});
-
-// Mark current position (most recent job)
-const currentJobs = document.querySelectorAll('.timeline-item');
-if (currentJobs.length > 0) {
-    // Mark the first two items as current (since they're both 2024-Present and 2023-Present)
-    currentJobs[0].classList.add('current');
-    if (currentJobs[1]) {
-        currentJobs[1].classList.add('current');
-    }
-}
-
-// Enhanced skill tag interactions
-document.querySelectorAll('.skill-tag').forEach(tag => {
-    tag.addEventListener('click', () => {
-        // Create ripple effect
-        const ripple = document.createElement('span');
-        ripple.style.cssText = `
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.6);
-            transform: scale(0);
-            animation: ripple 0.6s linear;
-            pointer-events: none;
-        `;
-        
-        const rect = tag.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        ripple.style.width = ripple.style.height = size + 'px';
-        ripple.style.left = (rect.width / 2 - size / 2) + 'px';
-        ripple.style.top = (rect.height / 2 - size / 2) + 'px';
-        
-        tag.style.position = 'relative';
-        tag.appendChild(ripple);
-        
-        setTimeout(() => {
-            ripple.remove();
-        }, 600);
-    });
-});
-
-// Add ripple animation styles
-const rippleStyles = document.createElement('style');
-rippleStyles.textContent = `
-    @keyframes ripple {
-        to {
-            transform: scale(4);
-            opacity: 0;
-        }
-    }
-`;
-document.head.appendChild(rippleStyles);
-
-// Experience section interactive features
-document.querySelectorAll('.timeline-tags .tag').forEach(tag => {
-    tag.addEventListener('click', () => {
-        // Filter timeline items by tag
-        const tagText = tag.textContent.toLowerCase();
-        const timelineItems = document.querySelectorAll('.timeline-item');
-        
-        timelineItems.forEach(item => {
-            const itemTags = Array.from(item.querySelectorAll('.tag')).map(t => t.textContent.toLowerCase());
-            if (itemTags.includes(tagText)) {
-                item.style.opacity = '1';
-                item.style.transform = 'scale(1.02)';
-                item.style.border = '2px solid var(--primary-color)';
-            } else {
-                item.style.opacity = '0.5';
-                item.style.transform = 'scale(0.98)';
-                item.style.border = '1px solid var(--border-color)';
-            }
-        });
-        
-        // Reset after 3 seconds
-        setTimeout(() => {
-            timelineItems.forEach(item => {
-                item.style.opacity = '';
-                item.style.transform = '';
-                item.style.border = '';
-            });
-        }, 3000);
-    });
-});
-
-// Skills category hover effects enhancement
-document.querySelectorAll('.skill-category').forEach(category => {
-    category.addEventListener('mouseenter', () => {
-        // Slightly fade other categories
-        document.querySelectorAll('.skill-category').forEach(other => {
-            if (other !== category) {
-                other.style.opacity = '0.7';
-                other.style.transform = 'scale(0.98)';
-            }
-        });
-    });
+// Skills category collapsible functionality - Fixed
+function initializeSkillCategories() {
+    const skillCategories = document.querySelectorAll('.skill-category');
     
-    category.addEventListener('mouseleave', () => {
-        // Reset all categories
-        document.querySelectorAll('.skill-category').forEach(other => {
-            other.style.opacity = '';
-            other.style.transform = '';
-        });
-    });
-});
-
-// Add performance optimization for animations
-const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-if (prefersReducedMotion.matches) {
-    // Disable animations for users who prefer reduced motion
-    const style = document.createElement('style');
-    style.textContent = `
-        *, *::before, *::after {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
+    skillCategories.forEach((category, index) => {
+        const header = category.querySelector('.skill-category-header');
+        const skillsGrid = category.querySelector('.skills-grid');
+        
+        if (!header || !skillsGrid) return;
+        
+        // Add expand button if it doesn't exist
+        let expandBtn = header.querySelector('.expand-btn');
+        if (!expandBtn) {
+            expandBtn = document.createElement('button');
+            expandBtn.className = 'expand-btn';
+            expandBtn.setAttribute('aria-label', 'Collapse category');
+            expandBtn.innerHTML = '<i class="fas fa-chevron-down"></i>';
+            header.appendChild(expandBtn);
         }
-    `;
-    document.head.appendChild(style);
+        
+        // Store original max-height for smooth animation
+        const originalHeight = skillsGrid.scrollHeight;
+        skillsGrid.style.maxHeight = originalHeight + 'px';
+        
+        // Add click handler to header for expanding/collapsing
+        header.addEventListener('click', (e) => {
+            e.preventDefault();
+            toggleSkillCategory(category);
+        });
+        
+        // Start with some categories collapsed (optional)
+        if (index > 2) { // Keep first 3 categories expanded by default
+            category.classList.add('collapsed');
+            skillsGrid.style.maxHeight = '0';
+            skillsGrid.style.opacity = '0';
+            expandBtn.setAttribute('aria-label', 'Expand category');
+        }
+    });
 }
+
+function toggleSkillCategory(category) {
+    const skillsGrid = category.querySelector('.skills-grid');
+    const expandBtn = category.querySelector('.expand-btn');
+    
+    if (!skillsGrid || !expandBtn) return;
+    
+    const isCollapsed = category.classList.contains('collapsed');
+    
+    if (isCollapsed) {
+        // Expand
+        category.classList.remove('collapsed');
+        skillsGrid.style.maxHeight = skillsGrid.scrollHeight + 'px';
+        skillsGrid.style.opacity = '1';
+        expandBtn.setAttribute('aria-label', 'Collapse category');
+        
+        // Animate progress bars if they haven't been animated yet
+        const progressBars = skillsGrid.querySelectorAll('.skill-progress-bar:not(.animate)');
+        progressBars.forEach(bar => {
+            const progress = bar.getAttribute('data-progress');
+            if (progress) {
+                bar.style.setProperty('--progress-width', progress + '%');
+                setTimeout(() => {
+                    bar.classList.add('animate');
+                }, 300);
+            }
+        });
+    } else {
+        // Collapse
+        category.classList.add('collapsed');
+        skillsGrid.style.maxHeight = '0';
+        skillsGrid.style.opacity = '0';
+        expandBtn.setAttribute('aria-label', 'Expand category');
+    }
+}
+
+// Initialize skill categories when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    initializeSkillCategories();
+});
 
 // Add particle effect to hero section (optional)
 function createParticles() {
@@ -529,9 +471,6 @@ particleStyles.textContent = `
     }
 `;
 document.head.appendChild(particleStyles);
-
-// Initialize particles (uncomment if you want particle effect)
-// createParticles();
 
 // Handle external links
 document.addEventListener('click', (e) => {
@@ -600,102 +539,3 @@ document.head.appendChild(loadingStyles);
 console.log('%c🚀 Welcome to Mustafa Ghoneim\'s Portfolio!', 'color: #0066ff; font-size: 16px; font-weight: bold;');
 console.log('%cBuilt with passion for AI, Robotics, and Education 🤖📚', 'color: #00d4aa; font-size: 14px;');
 console.log('%cInterested in collaborating? Reach out! 💪', 'color: #ff6b35; font-size: 14px;');
-
-// Skills category expandable functionality
-function initializeSkillCategories() {
-    const skillCategories = document.querySelectorAll('.skill-category');
-    
-    skillCategories.forEach(category => {
-        const header = category.querySelector('.skill-category-header');
-        const expandBtn = category.querySelector('.expand-btn');
-        const content = category.querySelector('.skill-content');
-        
-        // Only add expandable functionality to categories with expand buttons
-        if (expandBtn && content) {
-            // Initially collapse all expandable categories
-            category.classList.add('collapsed');
-            content.style.maxHeight = '0';
-            content.style.opacity = '0';
-            
-            // Add click handler to header for expanding/collapsing
-            header.addEventListener('click', (e) => {
-                e.preventDefault();
-                toggleSkillCategory(category);
-            });
-        } else if (content) {
-            // For non-expandable categories, ensure content is visible
-            content.style.maxHeight = 'none';
-            content.style.opacity = '1';
-        }
-    });
-}
-
-function toggleSkillCategory(category) {
-    const content = category.querySelector('.skill-content');
-    const expandBtn = category.querySelector('.expand-btn');
-    
-    if (!content || !expandBtn) return;
-    
-    const isCollapsed = category.classList.contains('collapsed');
-    
-    if (isCollapsed) {
-        // Expand
-        category.classList.remove('collapsed');
-        content.style.maxHeight = content.scrollHeight + 'px';
-        content.style.opacity = '1';
-        expandBtn.setAttribute('aria-label', 'Collapse category');
-    } else {
-        // Collapse
-        category.classList.add('collapsed');
-        content.style.maxHeight = '0';
-        content.style.opacity = '0';
-        expandBtn.setAttribute('aria-label', 'Expand category');
-    }
-}
-
-// Add expand buttons to all skill categories that don't have them
-function addExpandButtonsToSkillCategories() {
-    const skillCategories = document.querySelectorAll('.skill-category');
-    
-    skillCategories.forEach(category => {
-        const header = category.querySelector('.skill-category-header');
-        const existingBtn = category.querySelector('.expand-btn');
-        const skillItems = category.querySelector('.skill-items');
-        const skillTags = category.querySelector('.skill-tags');
-        
-        // Skip if expand button already exists
-        if (existingBtn) return;
-        
-        // Create expand button
-        const expandBtn = document.createElement('button');
-        expandBtn.className = 'expand-btn';
-        expandBtn.setAttribute('aria-label', 'Expand category');
-        expandBtn.innerHTML = '<i class="fas fa-chevron-down"></i>';
-        
-        // Add expand button to header
-        header.appendChild(expandBtn);
-        
-        // Wrap skill items and tags in skill-content div if not already wrapped
-        if (skillItems && !category.querySelector('.skill-content')) {
-            const skillContent = document.createElement('div');
-            skillContent.className = 'skill-content';
-            
-            // Move skill items and tags into content wrapper
-            if (skillItems) {
-                skillContent.appendChild(skillItems);
-            }
-            if (skillTags) {
-                skillContent.appendChild(skillTags);
-            }
-            
-            // Insert content wrapper after header
-            header.parentNode.insertBefore(skillContent, header.nextSibling);
-        }
-    });
-}
-
-// Initialize skill categories when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    addExpandButtonsToSkillCategories();
-    initializeSkillCategories();
-});
