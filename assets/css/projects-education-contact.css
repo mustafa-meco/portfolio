@@ -6,10 +6,10 @@
 /* Projects Header Section */
 .projects-header {
     padding: var(--spacing-4xl) 0 var(--spacing-3xl) 0;
-    background: linear-gradient(135deg, 
-        rgba(0, 102, 255, 0.1) 0%, 
-        rgba(0, 212, 170, 0.1) 50%, 
-        rgba(255, 107, 53, 0.1) 100%);
+    background: linear-gradient(135deg,
+            rgba(0, 102, 255, 0.1) 0%,
+            rgba(0, 212, 170, 0.1) 50%,
+            rgba(255, 107, 53, 0.1) 100%);
     position: relative;
     overflow: hidden;
 }
@@ -185,7 +185,7 @@
 .project-card:hover {
     transform: translateY(-10px) scale(1.02);
     border-color: var(--primary-color);
-    box-shadow: 
+    box-shadow:
         0 20px 40px rgba(0, 102, 255, 0.2),
         0 10px 20px rgba(0, 0, 0, 0.1);
 }
@@ -394,17 +394,17 @@
 }
 
 .project-link.github {
-    border-color: #333;
-    color: #333;
+    border-color: #888;
+    color: #888;
 }
 
 .project-link.github::before {
-    background: #333;
+    background: #888;
 }
 
 .project-link.github:hover {
     color: white;
-    box-shadow: 0 5px 15px rgba(51, 51, 51, 0.4);
+    box-shadow: 0 5px 15px rgba(136, 136, 136, 0.4);
 }
 
 .project-link.youtube {
@@ -741,7 +741,7 @@
 
 .contact-form:hover {
     border-color: var(--primary-color);
-    box-shadow: 
+    box-shadow:
         0 10px 30px rgba(0, 102, 255, 0.15),
         0 0 20px rgba(0, 102, 255, 0.1);
 }
